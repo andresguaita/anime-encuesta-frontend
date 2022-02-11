@@ -6,7 +6,7 @@ import { AnimeVote } from "./components/AnimeVote";
 
 const connectSocketServer = ( ) =>{
 
-  const socket = io('http://localhost:8080',{
+  const socket = io('https://anime-encuesta.herokuapp.com',{
     transports:['websocket']
   });
 
@@ -55,11 +55,18 @@ function App() {
     socket.emit( 'crear-anime', { nombre, image});
   }
 
+  const votar = ( id ) => {
+    socket.emit( 'votar-anime', id );
+  }
+
+  const borrar = ( id ) => {
+    socket.emit( 'borrar-anime', id );
+  }
 
   return (
     <div className="container">
       <div className="alert">
-        <p>
+        <p className=" fs-4 text text-white">
           Service status:
           {
             online
@@ -71,17 +78,20 @@ function App() {
         </p>
       </div>
 
-      <h1 className="row justify-content-center">Anime VS</h1>
-      <hr />
+      <h1 className="row justify-content-center text-white">Anime VS</h1>
+      <hr style={{"color" : "white"}}/>
+      
       <div className="row">
-        <div className="col-4">
+        <div className="col-4 bg-dark bg-opacity-75">
           <AnimeList
           crearAnime= {crearAnime}
           />
         </div>
-        <div className="col-8 d-flex justify-content-around flex-row ">
+        <div className="col-8 d-flex justify-content-around flex-row bg-dark bg-opacity-75">
           <AnimeVote
+          votar= {votar}
           data={ animes }
+          borrar={borrar}
           />
         </div>
       </div>

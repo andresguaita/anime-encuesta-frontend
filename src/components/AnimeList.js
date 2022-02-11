@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { getAnimeData } from '../helpers/getAnime';
+import { LoadingScreen } from './LoadingScreen';
 
 
 export const AnimeList = ({crearAnime}) => {
 
    const [search, setSearch] = useState('');
    const [animes, setAnimes] = useState('');
+   const [loading, setLoading] = useState(false);
     
 
    const handleInputChange = ({target}) =>{
@@ -16,11 +18,14 @@ export const AnimeList = ({crearAnime}) => {
    const handleSubmit = async(e) =>{
        e.preventDefault()
        if(search.length>0){
+        setLoading(true)
         const searchAnime= await getAnimeData(search)
         setAnimes( searchAnime.map( anime =>{
             return anime;
        }))
-
+       setLoading(false)
+       setSearch('')
+       
    }}
    
    const handleAnime = (indexItem ) =>{
@@ -31,10 +36,10 @@ export const AnimeList = ({crearAnime}) => {
 
     const rowCreate = () => {
         return (
-            
+                
                 animes && animes.map((anime, index )=>(
                     <tr key={anime.id}>
-                    <td>
+                    <td className='text-white'>
                         {anime.title}
                     </td>
                     
@@ -47,10 +52,13 @@ export const AnimeList = ({crearAnime}) => {
         )
     }
 
+    if(loading===true) return <LoadingScreen/>
+
     return <>
-        <h2>Busca un anime</h2>
+        <h2 className='text-white'>Busca un anime</h2>
         <form onSubmit={handleSubmit}>
-        <input 
+        <input
+        className='rounded-pill' 
         value={search}
         onChange={handleInputChange}
         />
@@ -60,7 +68,7 @@ export const AnimeList = ({crearAnime}) => {
         <table className='table table-stripped'>
             <thead>
               <tr>
-                  <th>Anime List</th>
+                  <th className='text-white'>Lista de animes</th>
               </tr>
             </thead>
             <tbody>
